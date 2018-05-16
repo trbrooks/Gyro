@@ -1,13 +1,4 @@
 # Haptic perception of gyroscopic forces
-# the weight.rda data object has 6 variables in "long" format
-# -----IVs-----
-# Participant: participant number
-# Arc:         wielding mode (Full = forehand 90 degrees, Half = forehand-backhand 45 degrees)
-# Mass:        how much weight was added? (0 g, 50 g, or 100 g)
-# Spin:        direction/rate of spin (-1 = 7000 rpm CCW, 0 = no spin, 1 = 7000 rpm
-# Abspin:      Absolute value of the spin variable
-# -----DV------
-# Judgment:    Participants rating of objects weight, in comparison to a standed object. Arbitrary Units.
 
 library(readxl)
 library(dplyr)
@@ -20,6 +11,16 @@ library(lme4)
 setwd("/yourfilepath/")
 
 df1 <- readRDS("weight.rds")
+
+# the weight.rda dataframe (tibble) has 6 variables in "long" format
+# -----IVs-----
+# Participant: participant number
+# Arc:         wielding mode (Full = forehand 90 degrees, Half = forehand-backhand 45 degrees)
+# Mass:        how much weight was added? (0 g, 50 g, or 100 g)
+# Spin:        direction/rate of spin (-1 = 7000 rpm CCW, 0 = no spin, 1 = 7000 rpm
+# Abspin:      Absolute value of the spin variable
+# -----DV------
+# Judgment:    Participants rating of objects weight, in comparison to a standed object. Arbitrary Units.
 
 #Get means of each group separated by arc
 means <- df1 %>%
