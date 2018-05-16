@@ -1,3 +1,14 @@
+# Haptic perception of gyroscopic forces
+# the weight.rda data object has 6 variables in "long" format
+# -----IVs-----
+# Participant: participant number
+# Arc:         wielding mode (Full = forehand 90 degrees, Half = forehand-backhand 45 degrees)
+# Mass:        how much weight was added? (0 g, 50 g, or 100 g)
+# Spin:        direction/rate of spin (-1 = 7000 rpm CCW, 0 = no spin, 1 = 7000 rpm
+# Abspin:      Absolute value of the spin variable
+# -----DV------
+# Judgment:    Participants rating of objects weight, in comparison to a standed object. Arbitrary Units.
+
 library(readxl)
 library(dplyr)
 library(tidyr)
@@ -7,34 +18,7 @@ library(cowplot)
 library(lme4)
 
 
-getwd()
-setwd("/Users/trbrooks/desktop/diss stuff/Exp1")
-
-files <- dir()[grep(".xlsx",dir())] 
-
-for (i in 1:length(files)) {
-  if(i==1){x<-NULL}
-  temp <- read_excel(files[i]) %>%
-  .[complete.cases(.),]
-  x<-rbind(x,temp)
-}
-
-x$Mass <- as.factor(x$Mass)
-x$Judgment <- as.numeric(x$Judgment)
-x$Spin <- recode(x$Spin, `-7k`=-1, `0`=0, `7k`=1) %>%
-  as.factor
-x$Abspin<-recode(x$Spin, `-1`=1, `0`=0, `1`=1) %>%
-  as.factor
-
-library(Rmisc)
-
-library(ggplot2)
-head(x)
-df1  <- x %>% 
-  as.tibble %>%
-  mutate_each(funs(factor), Spin)
-
-as.numeric(df1$Spin)
+df1 <- load(file = "weight.rda")
 
 #Get means of each group separated by arc
 means <- df1 %>%
@@ -84,13 +68,6 @@ row2 <- plot_grid(p1, p2, labels = c("B", "C"), nrow=1)
 plot_grid(p3, row2, ncol=1, labels=c('A',''))
 
 mod1 <- aov(Judgment ~ Spin + Mass + Spin:Arc + Error(Participant), data=df1)
-mod2 <- lm(Judgment ~ Mass + Spin + (1|Participant), data=df1)
-mod3 <- lm(Judgment ~ Mass + Spin + Spin:Arc + (1|Participant), data=df1)
 
 summary(mod1)
-
-df1 %>%
-  group_by(Mass) %>%
-  dplyr::summarise(Judgment = sd(Judgment))
-
 
