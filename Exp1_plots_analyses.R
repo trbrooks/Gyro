@@ -17,8 +17,9 @@ library(ggplot2)
 library(cowplot)
 library(lme4)
 
+setwd("/yourfilepath/")
 
-df1 <- load(file = "weight.rda")
+df1 <- readRDS("weight.rds")
 
 #Get means of each group separated by arc
 means <- df1 %>%
